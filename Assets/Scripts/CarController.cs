@@ -13,10 +13,33 @@ public class CarController : MonoBehaviour
     [SerializeField] WheelCollider rearDriverWheel, rearPassengerWheel;
     public Transform frontDriverTransform, frontPassengerTransform;
     public Transform rearDriverTransform, rearPassengerTransform;
+    private List<WheelCollider> frontAxle;
+    private List<WheelCollider> rearAxle;
+
+    private List<WheelCollider> allWheels;
 
     [SerializeField] float maxSteerAngle = 30f;
     [SerializeField] float motorForce = 50f;
     [SerializeField] float brakePower = 300f;
+
+    private void Awake() {
+        frontAxle = new List<WheelCollider>();
+        frontAxle.Add(frontDriverWheel);
+        frontAxle.Add(frontPassengerWheel);
+
+        rearAxle = new List<WheelCollider>();
+        rearAxle.Add(rearDriverWheel);
+        rearAxle.Add(rearPassengerWheel);
+
+        allWheels = new List<WheelCollider>();
+        allWheels.Add(frontDriverWheel);
+        allWheels.Add(frontPassengerWheel);
+        allWheels.Add(rearDriverWheel);
+        allWheels.Add(rearPassengerWheel);
+
+    }
+    
+
 
     private void FixedUpdate() {
         GetInput();
@@ -38,19 +61,22 @@ public class CarController : MonoBehaviour
     }
 
     private void Accelerate() {
-        frontDriverWheel.motorTorque = verticalInput * motorForce;
-        frontPassengerWheel.motorTorque = verticalInput * motorForce;
+        foreach(WheelCollider wheel in frontAxle) {
+            wheel.motorTorque = verticalInput * motorForce;
+        }
     }
         private void Brake()
     {
         if (Input.GetKey("space")) {
-            print("called");
-            frontDriverWheel.brakeTorque = brakePower;
-            frontPassengerWheel.brakeTorque = brakePower;
+            print("braking");
+            foreach(WheelCollider wheel in allWheels) {
+                wheel.brakeTorque = brakePower;
+            }
             return;
         }
-        frontDriverWheel.brakeTorque = 0f;
-        frontPassengerWheel.brakeTorque = 0f;
+        foreach(WheelCollider wheel in allWheels) {
+                wheel.brakeTorque = 0f;
+            }
     }
     private void UpdateWheelPoses() {
         UpdateWheelPose(frontDriverWheel, frontDriverTransform);

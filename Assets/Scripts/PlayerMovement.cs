@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] CharacterController controller;
-    [SerializeField] float moveSpeed = 12f;
+    [SerializeField] float moveSpeed = 4f;
+    [SerializeField] float sprintSpeed = 8f;
 
     [SerializeField] float gravity = -9.81f;
 
@@ -31,6 +32,10 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded && Input.GetButtonDown("Jump")) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
+
+        //if (Input.GetKey(KeyCode.LeftShift)) {
+            //moveSpeed = sprintSpeed;
+        //}
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");

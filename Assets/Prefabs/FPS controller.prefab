@@ -94,9 +94,11 @@ GameObject:
   - component: {fileID: 277079491170726587}
   - component: {fileID: 277079491170726586}
   - component: {fileID: 277079491170726589}
+  - component: {fileID: 719335733}
+  - component: {fileID: 719335737}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,7 +111,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 277079491170726584}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.596, z: 0.004}
+  m_LocalPosition: {x: 0.11500001, y: 0.63699996, z: 0.002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 277079491706677583}
@@ -210,8 +212,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eb22e4f575aabe48a1a076087750b9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseSensitivity: 1000
+  mouseSensitivity: 400
   playerBody: {fileID: 277079491706677583}
+--- !u!114 &719335733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277079491170726584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowDebugText: 0
+  m_ShowCameraFrustum: 1
+  m_IgnoreTimeScale: 0
+  m_WorldUpOverride: {fileID: 0}
+  m_UpdateMethod: 2
+  m_BlendUpdateMethod: 1
+  m_DefaultBlend:
+    m_Style: 1
+    m_Time: 2
+    m_CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  m_CustomBlends: {fileID: 0}
+  m_CameraCutEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_CameraActivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &719335737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277079491170726584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc145c9d58f9bf84c9fd09e5da6bb18a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObjectInfo: {fileID: 0}
+  thrust: 4000
 --- !u!1 &277079491654657856
 GameObject:
   m_ObjectHideFlags: 0
@@ -253,9 +303,10 @@ GameObject:
   - component: {fileID: 277079491706677583}
   - component: {fileID: 277079491706677582}
   - component: {fileID: 277079491706677680}
+  - component: {fileID: 277079490246975026}
   m_Layer: 0
   m_Name: FPS controller
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -308,11 +359,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 277079491706677582}
-  moveSpeed: 6
+  moveSpeed: 3.5
+  sprintSpeed: 8
   gravity: -20
   groundCheck: {fileID: 277079491654657857}
   groundDistance: 0.2
-  jumpHeight: 3
+  jumpHeight: 1.5
   groundMask:
     serializedVersion: 2
     m_Bits: 25
+--- !u!114 &277079490246975026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277079491706677581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49f69bf18c52583418db0f57a2d52fc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerMaxHealth: 100
+  PlayerHealth: 100
+  healthText: {fileID: 0}

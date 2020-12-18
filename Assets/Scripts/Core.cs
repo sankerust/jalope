@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class Core : MonoBehaviour
 {
-    [SerializeField] float dayLenghtMins = 10f;
-    float timer;
+    [SerializeField] float dayLenghtMins = 1f;
+    public float dayLenght;
+    public float timer;
+    
     // Start is called before the first frame update
     void Start()
     {
+        dayLenght = dayLenghtMins * 60;
         timer = 0f;
     }
 
