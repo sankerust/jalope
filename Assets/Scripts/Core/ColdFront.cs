@@ -9,13 +9,11 @@ public class ColdFront : MonoBehaviour
     [SerializeField] float firstRange = 400f;
     [SerializeField] float coldStep = 10f;
     float distanceToPlayer;
-    // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    // Update is called once per frame
     void Update()
     {
         distanceToPlayer = Vector3.Distance(this.transform.position, player.transform.position);

@@ -53,8 +53,6 @@ public class CarController : MonoBehaviour
         Brake();
         UpdateWheelPoses();
         ExitCar();
-
-        print(VehicleIsMoving());
     }
     public void GetInput() {
         horizontalInput = Input.GetAxis("Horizontal");

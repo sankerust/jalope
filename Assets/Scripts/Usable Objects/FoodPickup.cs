@@ -13,7 +13,8 @@ public class FoodPickup : MonoBehaviour, IUsable
     }
 
     public void Use() {
-        player.GetComponent<PlayerNeeds>().hunger += amountRestored;
+        player.GetComponent<PlayerNeeds>().hunger -= amountRestored;
         print("i ate");
+        Destroy(gameObject);
     }
 }

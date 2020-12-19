@@ -13,7 +13,8 @@ public class DrinkPickup : MonoBehaviour, IUsable
     }
 
     public void Use() {
-        player.GetComponent<PlayerNeeds>().thirst += amountRestored;
+        player.GetComponent<PlayerNeeds>().thirst -= amountRestored;
         print("i drank");
+        Destroy(gameObject);
     }
 }
