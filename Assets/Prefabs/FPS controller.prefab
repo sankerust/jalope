@@ -304,6 +304,7 @@ GameObject:
   - component: {fileID: 277079491706677582}
   - component: {fileID: 277079491706677680}
   - component: {fileID: 277079490246975026}
+  - component: {fileID: 277079490246975030}
   m_Layer: 0
   m_Name: FPS controller
   m_TagString: Player
@@ -383,3 +384,25 @@ MonoBehaviour:
   PlayerMaxHealth: 100
   PlayerHealth: 100
   healthText: {fileID: 0}
+  deathScreen: {fileID: 0}
+--- !u!114 &277079490246975030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277079491706677581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ee368d8ef033424e8dec0e9a254f9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hungerText: {fileID: 0}
+  thirstText: {fileID: 0}
+  energyText: {fileID: 0}
+  coldText: {fileID: 0}
+  maxHunger: 100
+  maxThirst: 100
+  maxCold: -60
+  minEnergy: 0
+  needsDamage: 5
