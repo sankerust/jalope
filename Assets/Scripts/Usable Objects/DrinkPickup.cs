@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class DrinkPickup : MonoBehaviour, IUsable
 {
-    GameObject player;
+    GameObject core;
     [SerializeField] float amountRestored = 25f;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        core = GameObject.Find("Core");
     }
 
     public void Use() {
-        player.GetComponent<PlayerNeeds>().thirst -= amountRestored;
+        core.GetComponent<PlayerNeeds>().thirst -= amountRestored;
         print("i drank");
         Destroy(gameObject);
     }

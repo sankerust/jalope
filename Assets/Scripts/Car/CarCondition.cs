@@ -17,6 +17,9 @@ public class CarCondition : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (fuelLeft <= 0) {
+            fuelLeft = 0;
+        }
         fuelText.text = "Fuel left: " + fuelLeft; 
     }
 }

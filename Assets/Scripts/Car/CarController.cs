@@ -8,6 +8,7 @@ public class CarController : MonoBehaviour
     float horizontalInput;
     float verticalInput;
     float steerAngle;
+    Vector3 carVelocity;
 
     [SerializeField] WheelCollider frontDriverWheel, frontPassengerWheel;
     [SerializeField] WheelCollider rearDriverWheel, rearPassengerWheel;
@@ -21,7 +22,8 @@ public class CarController : MonoBehaviour
     Rigidbody rigidbody;
 
     [SerializeField] float maxSteerAngle = 30f;
-    [SerializeField] float motorForce = 50f;
+    [SerializeField] float enginePower = 1000f;
+    float appliedMotorForce;
     [SerializeField] float brakePower = 300f;
 
     private void Awake() {
@@ -54,13 +56,20 @@ public class CarController : MonoBehaviour
         UpdateWheelPoses();
         ExitCar();
     }
+    
     public void GetInput() {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
     }
 
+    private bool CarMovingForward() {
+        carVelocity = rigidbody.velocity;
+        Vector3 localVelocity = transform.InverseTransformDirection(rigidbody.velocity);
+        return localVelocity.z > 0;
+    }
+
     public bool VehicleIsMoving() {
-        if (rigidbody.velocity.magnitude < 0.1) {
+        if (rigidbody.velocity.magnitude < 0.2) {
             return false;
         } else {
             return true;
@@ -75,14 +84,23 @@ public class CarController : MonoBehaviour
     }
 
     private void Accelerate() {
-        carCondition.fuelLeft = carCondition.fuelLeft - verticalInput;
+        CheckFuel();
+        
+        carCondition.fuelLeft = carCondition.fuelLeft - (Mathf.Abs(verticalInput) * 0.1f);
         foreach(WheelCollider wheel in frontAxle) {
-            wheel.motorTorque = verticalInput * motorForce;
+            wheel.motorTorque = verticalInput * appliedMotorForce;
+            } 
+    }
+
+    private void CheckFuel() {
+        if (carCondition.fuelLeft == 0) {
+         appliedMotorForce = 0f;   
+        } else {
+            appliedMotorForce = enginePower;
         }
     }
-        private void Brake()
-    {
-        if (Input.GetKey("space")) {
+    private void Brake() {
+        if (Input.GetKey(KeyCode.Space)) {
             print("braking");
             foreach(WheelCollider wheel in allWheels) {
                 wheel.brakeTorque = brakePower;
@@ -122,7 +140,7 @@ public class CarController : MonoBehaviour
         foreach(WheelCollider wheel in allWheels) {
                 wheel.brakeTorque = brakePower;
             }
-        //carCondition.fuelText.enabled = false;
+        carCondition.fuelText.enabled = false;
     }
 
     private void OnEnable() {
