@@ -65,7 +65,6 @@ public class ObjectHandling : MonoBehaviour
         if (isHolding && Input.GetButtonDown("Fire1")) {
             DropObject();
             objectInHand.gameObject.GetComponent<Rigidbody>().AddForce(transform.forward * thrust);
-            print("fire");
         }
 
         if (IsPickupAble()) {

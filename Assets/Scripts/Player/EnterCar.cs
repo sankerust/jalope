@@ -10,7 +10,7 @@ public class EnterCar : MonoBehaviour
     [SerializeField] Transform exitPositionObject;
     Vector3 exitPosition;
     public bool isInCar = false;
-    bool canEnter = false;
+    public bool canEnter = false;
 
     private void Start() {
         player = GameObject.FindWithTag("Player");

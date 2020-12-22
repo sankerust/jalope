@@ -54,7 +54,7 @@ public class CarController : MonoBehaviour
         Accelerate();
         Brake();
         UpdateWheelPoses();
-        ExitCar();
+        //ExitCar();
     }
     
     public void GetInput() {
