@@ -43,3 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce5f5113d608d84aa192a817e2d1f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frontSpeed: 0.1
+  baseTemperature: 0
+  maxCold: -200

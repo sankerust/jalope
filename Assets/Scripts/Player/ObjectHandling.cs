@@ -31,6 +31,7 @@ public class ObjectHandling : MonoBehaviour
             }
     }
     private bool IsInRange() {
+        if(RaycastObject() == null) {return false;}
         distanceToObject = Vector3.Distance(this.transform.position, RaycastObject().position);
         return (distanceToObject <= handsLenght);
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,11 @@ public class ColdFront : MonoBehaviour
     GameObject player;
     GameObject core;
     [SerializeField] float frontSpeed = 1f;
+    [SerializeField] float baseTemperature = 0f;
+    [SerializeField] float maxCold = -200f;
     float distanceToPlayer;
+    float updatedTemperature;
+    Vector3 playerPosition;
 
     private void Awake() {
 
@@ -23,9 +28,28 @@ public class ColdFront : MonoBehaviour
 
     void Update()
     {
-        distanceToPlayer = Vector3.Distance(this.transform.position, player.transform.position);
+        GetDistanceToPlayer();
+        ChasePlayer();
+        ApplyCold();
+    }
+
+    private void GetDistanceToPlayer()
+    {
+        playerPosition = player.transform.position;
+        distanceToPlayer = Mathf.Clamp(Vector3.Distance(this.transform.position, playerPosition),10, Mathf.Infinity);
+    }
+
+    private void ChasePlayer()
+    {
         this.transform.position = Vector3.MoveTowards(transform.position, player.transform.position, frontSpeed);
-        playerNeeds.currentTemperature = -10000/distanceToPlayer;
-        print(player.transform.position);
+    }
+
+    private void ApplyCold() {
+        updatedTemperature = (100 - 1000 / Mathf.Pow(Mathf.Log10(distanceToPlayer), 2));
+        if (updatedTemperature > maxCold && updatedTemperature < baseTemperature) {
+            playerNeeds.currentTemperature = updatedTemperature;
+        } else if (updatedTemperature < maxCold) {
+            playerNeeds.currentTemperature = maxCold;
+            } 
     }
 }

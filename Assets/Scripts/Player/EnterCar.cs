@@ -43,6 +43,8 @@ public class EnterCar : MonoBehaviour
 
     private void EnterVehicle() {
         if(canEnter && Input.GetKeyDown("e") && !isInCar) {
+            //SwitchOffPlayer(true);
+            player.gameObject.transform.SetParent(carController.transform);
             player.SetActive(false);
             carController.enabled = true;
             CarCam.gameObject.SetActive(true);
@@ -50,14 +52,22 @@ public class EnterCar : MonoBehaviour
         }
     }
 
+    private void SwitchOffPlayer(bool state) {
+        foreach (Transform child in player.transform) {
+                child.gameObject.SetActive(!state);
+            }
+    }
+
     private void ExitCar() {
 
         if (Input.GetKeyDown("f") && isInCar && !carController.VehicleIsMoving()) {
             player.transform.position = exitPosition;
+            player.gameObject.transform.SetParent(null);
+            player.SetActive(true);
             CarCam.gameObject.SetActive(false);
             isInCar = false;
             carController.enabled = false;
-            player.SetActive(true);
+            //SwitchOffPlayer(false);
             canEnter = false;
         }
     }

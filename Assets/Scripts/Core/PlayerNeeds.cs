@@ -10,6 +10,7 @@ public class PlayerNeeds : MonoBehaviour
     [SerializeField] TextMeshProUGUI thirstText;
     [SerializeField] TextMeshProUGUI energyText;
     [SerializeField] TextMeshProUGUI coldText;
+    [SerializeField] TextMeshProUGUI dyingReasonText;
     
     [SerializeField] float maxHunger = 100f;
     [SerializeField] float maxThirst = 100f;
@@ -30,7 +31,8 @@ public class PlayerNeeds : MonoBehaviour
     
 private void Start() {
     core = GameObject.Find("Core").GetComponent<Core>();
-    health = GetComponent<Health>();
+    health = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
+    dyingReasonText.text = null;
     
 }
 
@@ -51,7 +53,7 @@ private void Update() {
     {
         coldText.text = "temperature: " + currentTemperature;
         if (currentTemperature <= maxCold && canDamage) {
-            StartCoroutine(DamageByNeeds());
+            StartCoroutine(DamageByNeeds("Dying of cold"));
         }
     }
 
@@ -61,7 +63,7 @@ private void Update() {
         energyLeft = core.dayLenght - energyTimer;
         energyText.text = "Energy: " + energyLeft;
         if (energyLeft <= minEnergy && canDamage) {
-            StartCoroutine(DamageByNeeds());
+            StartCoroutine(DamageByNeeds("Dying of exhaustion"));
         }
     }
 
@@ -73,7 +75,7 @@ private void Update() {
         thirst += Time.deltaTime;
         thirstText.text = "Thirst: " + thirst;
         if (thirst >= maxThirst && canDamage) {
-            StartCoroutine(DamageByNeeds());
+            StartCoroutine(DamageByNeeds("Dying of thirst"));
         }
     }
 
@@ -85,14 +87,17 @@ private void Update() {
         hunger += Time.deltaTime;
         hungerText.text = "Hunger: " + hunger;
         if (hunger >= maxHunger && canDamage) {
-            StartCoroutine(DamageByNeeds());
+            StartCoroutine(DamageByNeeds("Dying of hunger"));
         }
     }
 
-    IEnumerator DamageByNeeds() {
+    IEnumerator DamageByNeeds(string message) {
         canDamage = false;
         health.TakeDamage(needsDamage);
-        yield return new WaitForSeconds(5f);
+        dyingReasonText.text = message;
+        yield return new WaitForSeconds(2f);
+        dyingReasonText.text = null;
+        yield return new WaitForSeconds(3f);
         canDamage = true;
     }
 }
