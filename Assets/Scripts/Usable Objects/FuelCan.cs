@@ -11,9 +11,10 @@ public class FuelCan : MonoBehaviour, IUsable
     // Start is called before the first frame update
     void Start()
     {
-        car = GameObject.FindGameObjectWithTag("Car");
+        
     }
     public void Use() {
+        car = GameObject.FindGameObjectWithTag("Car");
         if (!isEmpty) {
         float distanceToCar = Vector3.Distance(gameObject.transform.position, car.transform.position);
         if (distanceToCar > rangeOfUse) {
