@@ -8,10 +8,15 @@ public class ObjectHandling : MonoBehaviour
     [SerializeField] TextMeshProUGUI ObjectInfo;
     [SerializeField] float thrust = 3f;
     [SerializeField] float handsLenght = 2f;
+    [SerializeField] AudioClip pickupSound;
     Transform objectInHand;
+    AudioSource audioSource;
 
     bool isHolding = false;
     float distanceToObject;
+    private void Awake() {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     void Update()
     {
@@ -85,6 +90,7 @@ public class ObjectHandling : MonoBehaviour
         isHolding = true;
         objectInHand.parent = this.transform;
         objectInHand.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        audioSource.PlayOneShot(pickupSound);
     }
 
     private void DropObject()
@@ -92,5 +98,6 @@ public class ObjectHandling : MonoBehaviour
         isHolding = false;
         objectInHand.parent = null;
         objectInHand.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+        audioSource.PlayOneShot(pickupSound);
     }
 }

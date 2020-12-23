@@ -24,11 +24,22 @@ public class CarController : MonoBehaviour
     [SerializeField] float maxSteerAngle = 30f;
     [SerializeField] float enginePower = 1000f;
     float appliedMotorForce;
+    float wheelRadius, wheelRpm, circumFerence, normalizedSpeed, speedOnKmh;
+
     [SerializeField] float brakePower = 300f;
+    private bool engineRunning = false;
+
+    AudioSource audioSource;
+    [SerializeField] AudioClip starterSound;
+    [SerializeField] AudioClip engineSound;
+    [SerializeField] AudioClip engineStopSound;
+    public float engineSoundPitch = 0.3f;
+
 
     private void Awake() {
         carCondition = GetComponent<CarCondition>();
         rigidbody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
 
         frontAxle = new List<WheelCollider>();
         frontAxle.Add(frontDriverWheel);
@@ -43,23 +54,60 @@ public class CarController : MonoBehaviour
         allWheels.Add(frontPassengerWheel);
         allWheels.Add(rearDriverWheel);
         allWheels.Add(rearPassengerWheel);
-
     }
     
-
-
     private void FixedUpdate() {
         GetInput();
         Steer();
-        Accelerate();
         Brake();
         UpdateWheelPoses();
-        //ExitCar();
+        if (engineRunning) {
+            Accelerate();
+        }
+
     }
+
+    private void Update() {
+        speedometer();
+        StartCoroutine(StartStopEngine());
+        //print(rigidbody.velocity.magnitude * 3.6);
+    }
+
+ public void speedometer(){
+         wheelRadius = frontDriverWheel.radius; // put here your wheel radius
+         wheelRpm = (frontDriverWheel.rpm + frontPassengerWheel.rpm) / 2; // put here you rpm
+
+         circumFerence = 2.0f * 3.14f * wheelRadius; // Finding circumFerence 2 Pi R
+         speedOnKmh = circumFerence * wheelRpm *60; // finding kmh
+         normalizedSpeed = (speedOnKmh - 0) / (140 - 0);
+         print(speedOnKmh / 1000);
+     }
     
     public void GetInput() {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
+    }
+    IEnumerator StartStopEngine() {
+        if(Input.GetKeyDown("e") && !engineRunning) {
+            audioSource.clip = starterSound;
+            audioSource.Play();
+            yield return new WaitForSeconds(1.5f);
+            engineRunning = true;
+            audioSource.Stop();
+            audioSource.clip = engineSound;
+            audioSource.pitch = engineSoundPitch;
+            audioSource.Play();
+        }
+
+        if(Input.GetKeyDown("e") && engineRunning && !VehicleIsMoving()) {
+            audioSource.Stop();
+            audioSource.pitch = 1f;
+            audioSource.clip = engineStopSound;
+            audioSource.Play();
+            engineRunning = false;
+            yield return new WaitForSeconds(audioSource.clip.length);
+            audioSource.Stop();
+        }
     }
 
     private bool CarMovingForward() {
@@ -101,7 +149,6 @@ public class CarController : MonoBehaviour
     }
     private void Brake() {
         if (Input.GetKey(KeyCode.Space)) {
-            print("braking");
             foreach(WheelCollider wheel in allWheels) {
                 wheel.brakeTorque = brakePower;
             }
@@ -126,12 +173,6 @@ public class CarController : MonoBehaviour
 
         transform.position = position;
         transform.rotation = quaternion;
-    }
-    
-    private void ExitCar() {
-        if (Input.GetKeyDown("e") && !VehicleIsMoving()) {
-            this.enabled = false;
-        }
     }
 
     private void OnDisable() {

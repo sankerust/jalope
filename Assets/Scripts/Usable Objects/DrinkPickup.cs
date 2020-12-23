@@ -5,6 +5,7 @@ using UnityEngine;
 public class DrinkPickup : MonoBehaviour, IUsable
 {
     GameObject core;
+    AudioSource audioSource;
     [SerializeField] float amountRestored = 25f;
 
     void Start()
@@ -13,8 +14,11 @@ public class DrinkPickup : MonoBehaviour, IUsable
     }
 
     public void Use() {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.Play();
+        GetComponent<MeshRenderer>().enabled = false;
         core.GetComponent<PlayerNeeds>().thirst -= amountRestored;
-        print("i drank");
-        Destroy(gameObject);
+        
+        Destroy(gameObject, audioSource.clip.length);
     }
 }

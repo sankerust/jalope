@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class FuelCan : MonoBehaviour, IUsable
 {
     GameObject car;
     [SerializeField] float amountRestored = 25f;
     [SerializeField] float rangeOfUse = 2f;
+    [SerializeField] AudioClip refuelSound;
+    [SerializeField] AudioClip isEmptySound;
+    AudioSource audioSource;
     bool isEmpty = false;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    private void Awake() {
+        audioSource = GetComponent<AudioSource>();
     }
     public void Use() {
         car = GameObject.FindGameObjectWithTag("Car");
@@ -26,10 +28,12 @@ public class FuelCan : MonoBehaviour, IUsable
         print("filled up da car");
         gameObject.GetComponent<Rigidbody>().mass = 1;
         isEmpty = true;
+        audioSource.PlayOneShot(refuelSound);
         return;
         }
 
         if(isEmpty) {
+            audioSource.PlayOneShot(isEmptySound);
             print("The can is empty");
         }
 

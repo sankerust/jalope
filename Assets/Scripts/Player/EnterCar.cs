@@ -11,6 +11,12 @@ public class EnterCar : MonoBehaviour
     Vector3 exitPosition;
     public bool isInCar = false;
     public bool canEnter = false;
+    AudioSource audioSource;
+    [SerializeField] AudioClip doorOpenSound;
+    [SerializeField] AudioClip doorCloseSound;
+    private void Awake() {
+        audioSource = gameObject.AddComponent<AudioSource>();
+    }
 
     private void Start() {
         player = GameObject.FindWithTag("Player");
@@ -20,8 +26,8 @@ public class EnterCar : MonoBehaviour
 
     private void Update() {
         UpdateExitPosition();
-        EnterVehicle();
-        ExitCar();
+        StartCoroutine(EnterVehicle());
+        StartCoroutine(ExitCar());
     }
 
     private void UpdateExitPosition() {
@@ -41,26 +47,36 @@ public class EnterCar : MonoBehaviour
         }
     }
 
-    private void EnterVehicle() {
+    IEnumerator EnterVehicle() {
         if(canEnter && Input.GetKeyDown("e") && !isInCar) {
-            //SwitchOffPlayer(true);
-            player.gameObject.transform.SetParent(carController.transform);
+            audioSource.clip = doorOpenSound;
+            audioSource.Play();
+            player.GetComponent<PlayerMovement>().enabled = false;
+            yield return new WaitForSeconds(audioSource.clip.length);
+
+            player.GetComponent<PlayerMovement>().enabled = true;
             player.SetActive(false);
+            player.gameObject.transform.SetParent(carController.transform);
+            
             carController.enabled = true;
             CarCam.gameObject.SetActive(true);
             isInCar = true;
+            audioSource.clip = doorCloseSound;
+            audioSource.Play();
         }
     }
 
-    private void SwitchOffPlayer(bool state) {
-        foreach (Transform child in player.transform) {
-                child.gameObject.SetActive(!state);
-            }
-    }
-
-    private void ExitCar() {
+    IEnumerator ExitCar() {
 
         if (Input.GetKeyDown("f") && isInCar && !carController.VehicleIsMoving()) {
+            audioSource.clip = doorOpenSound;
+            audioSource.Play();
+
+            yield return new WaitForSeconds(audioSource.clip.length);
+
+            audioSource.clip = doorCloseSound;
+            audioSource.Play();
+
             player.transform.position = exitPosition;
             player.gameObject.transform.SetParent(null);
             player.SetActive(true);

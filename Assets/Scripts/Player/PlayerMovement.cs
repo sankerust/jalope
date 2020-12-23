@@ -16,10 +16,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpHeight = 3f;
 
     [SerializeField] LayerMask groundMask;
+    [SerializeField] AudioClip footstepSound;
+    [SerializeField] AudioClip jumpSound;
 
     bool isGrounded;
 
     Vector3 velocity;
+    AudioSource audioSource;
+    private void Awake() {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = footstepSound;
+    }
 
     void Update()
     {
@@ -31,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded && Input.GetButtonDown("Jump")) {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            audioSource.pitch = 1;
+            audioSource.PlayOneShot(jumpSound);
         }
 
         //if (Input.GetKey(KeyCode.LeftShift)) {
@@ -39,6 +48,11 @@ public class PlayerMovement : MonoBehaviour
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
+
+        if ((x != 0 || z != 0) && isGrounded && !audioSource.isPlaying) {
+            audioSource.pitch = 2;
+            audioSource.Play();
+        }
 
         Vector3 move = transform.right * x + transform.forward * z;
 
