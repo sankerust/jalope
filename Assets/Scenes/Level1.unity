@@ -975,6 +975,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2018484790193203904, guid: 9c0102f255772b14a990535e4929997d, type: 3}
+      propertyPath: m_Mass
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3009760907178354713, guid: 9c0102f255772b14a990535e4929997d, type: 3}
+      propertyPath: m_Mass
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 3117533461863835364, guid: 9c0102f255772b14a990535e4929997d, type: 3}
       propertyPath: fuelText
       value: 
@@ -1026,6 +1034,14 @@ PrefabInstance:
     - target: {fileID: 4799880793224025389, guid: 9c0102f255772b14a990535e4929997d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6388803646905078835, guid: 9c0102f255772b14a990535e4929997d, type: 3}
+      propertyPath: m_Mass
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8321447260312741025, guid: 9c0102f255772b14a990535e4929997d, type: 3}
+      propertyPath: m_Mass
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c0102f255772b14a990535e4929997d, type: 3}
