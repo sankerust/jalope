@@ -9,31 +9,42 @@ public class CarController : MonoBehaviour
     float verticalInput;
     float steerAngle;
     Vector3 carVelocity;
+    CarCondition carCondition;
+    Rigidbody rigidbody;
+    AudioSource audioSource;
+    private List<WheelCollider> frontAxle;
+    private List<WheelCollider> rearAxle;
+
+    private List<WheelCollider> allWheels;
 
     [SerializeField] WheelCollider frontDriverWheel, frontPassengerWheel;
     [SerializeField] WheelCollider rearDriverWheel, rearPassengerWheel;
     public Transform frontDriverTransform, frontPassengerTransform;
     public Transform rearDriverTransform, rearPassengerTransform;
-    private List<WheelCollider> frontAxle;
-    private List<WheelCollider> rearAxle;
-
-    private List<WheelCollider> allWheels;
-    CarCondition carCondition;
-    Rigidbody rigidbody;
-
+    [Space(10)]
     [SerializeField] float maxSteerAngle = 30f;
     [SerializeField] float enginePower = 1000f;
+    [SerializeField] float brakePower = 300f;
     float appliedMotorForce;
     float wheelRadius, wheelRpm, circumFerence, normalizedSpeed, speedOnKmh;
-
-    [SerializeField] float brakePower = 300f;
     private bool engineRunning = false;
-
-    AudioSource audioSource;
+    
+    [Space(10)]
     [SerializeField] AudioClip starterSound;
     [SerializeField] AudioClip engineSound;
     [SerializeField] AudioClip engineStopSound;
+
+    [Space(10)]
+    [SerializeField] float lerpStepForSound = 0.1f;
+    [SerializeField] float firstGearMax = 30;
+    [SerializeField] float secondGearMax = 60;
+    [SerializeField] float thirdGearMax = 90;
+    [SerializeField] float fourthGearMax = 120;
+    [Space(10)]
+    
     public float engineSoundPitch = 0.3f;
+    public int carSpeed;
+    private float minSpeed, maxSpeed;
 
 
     private void Awake() {
@@ -57,57 +68,98 @@ public class CarController : MonoBehaviour
     }
     
     private void FixedUpdate() {
-        GetInput();
+        GetAxisInput();
         Steer();
         Brake();
         UpdateWheelPoses();
-        if (engineRunning) {
-            Accelerate();
-        }
-
+        Accelerate();
     }
 
-    private void Update() {
-        speedometer();
-        StartCoroutine(StartStopEngine());
-        //print(rigidbody.velocity.magnitude * 3.6);
-    }
-
- public void speedometer(){
-         wheelRadius = frontDriverWheel.radius; // put here your wheel radius
-         wheelRpm = (frontDriverWheel.rpm + frontPassengerWheel.rpm) / 2; // put here you rpm
-
-         circumFerence = 2.0f * 3.14f * wheelRadius; // Finding circumFerence 2 Pi R
-         speedOnKmh = circumFerence * wheelRpm *60; // finding kmh
-         normalizedSpeed = (speedOnKmh - 0) / (140 - 0);
-         print(speedOnKmh / 1000);
-     }
-    
-    public void GetInput() {
+    private void GetAxisInput()
+    {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
     }
-    IEnumerator StartStopEngine() {
-        if(Input.GetKeyDown("e") && !engineRunning) {
-            audioSource.clip = starterSound;
-            audioSource.Play();
-            yield return new WaitForSeconds(1.5f);
-            engineRunning = true;
-            audioSource.Stop();
-            audioSource.clip = engineSound;
-            audioSource.pitch = engineSoundPitch;
-            audioSource.Play();
-        }
 
-        if(Input.GetKeyDown("e") && engineRunning && !VehicleIsMoving()) {
-            audioSource.Stop();
-            audioSource.pitch = 1f;
-            audioSource.clip = engineStopSound;
-            audioSource.Play();
-            engineRunning = false;
-            yield return new WaitForSeconds(audioSource.clip.length);
-            audioSource.Stop();
+    private void Update() {
+        GetInput();
+        CheckFuel();
+        speedometerVelocity();
+        PlayEngineSound();
+    }
+
+ private void speedometerRPM(){
+     // incorrect
+         wheelRadius = frontDriverWheel.radius; 
+         wheelRpm = (frontDriverWheel.rpm + frontPassengerWheel.rpm) / 2f; 
+
+         circumFerence = 2.0f * 3.14f * wheelRadius; // Finding circumFerence 2 Pi R
+         speedOnKmh = circumFerence * wheelRpm *60; 
+         normalizedSpeed = (speedOnKmh - 0) / (140 - 0);
+     }
+     private void speedometerVelocity() {
+         carSpeed = Mathf.RoundToInt(rigidbody.velocity.magnitude * 3.6f);
+     }
+
+     private void PlayEngineSound() {
+         if (engineRunning) {
+            float idlingModifier = 1f;
+
+            if(carSpeed < firstGearMax) {
+                minSpeed = 0f;
+                maxSpeed = firstGearMax;
+            }
+
+            if(carSpeed > firstGearMax && carSpeed < secondGearMax) {
+                minSpeed = firstGearMax;
+                maxSpeed = secondGearMax;
+            }
+
+            if(carSpeed > secondGearMax && carSpeed < thirdGearMax) {
+                minSpeed = secondGearMax;
+                maxSpeed = thirdGearMax;
+            }
+
+            if(carSpeed > thirdGearMax && carSpeed < fourthGearMax) {
+                minSpeed = thirdGearMax;
+                maxSpeed = fourthGearMax;
+            }
+            if(VehicleIsMoving()) {
+                idlingModifier = 2f;
+            }
+
+            normalizedSpeed = (carSpeed - minSpeed) / (maxSpeed - minSpeed);
+            audioSource.pitch = Mathf.Lerp(audioSource.pitch, (normalizedSpeed + engineSoundPitch * idlingModifier) , lerpStepForSound);
+         } else {
+             return;
+         }
+         
+     }
+    public void GetInput() {
+        if(Input.GetKeyDown("e") && !engineRunning) {
+            StartCoroutine(StartEngine());
         }
+        if(Input.GetKeyDown("e") && engineRunning && !VehicleIsMoving()) {
+            StartCoroutine(StopEngine());
+        }
+    }
+    IEnumerator StopEngine() {
+        engineRunning = false;
+        audioSource.Stop();
+        audioSource.pitch = 1f;
+        audioSource.clip = engineStopSound;
+        audioSource.Play();
+        yield return new WaitForSeconds(audioSource.clip.length);
+        audioSource.Stop();
+    }
+    IEnumerator StartEngine() {
+        audioSource.clip = starterSound;
+        audioSource.Play();
+        yield return new WaitForSeconds(1.5f);
+        audioSource.Stop();
+        audioSource.clip = engineSound;
+        engineRunning = true;
+        audioSource.Play();
     }
 
     private bool CarMovingForward() {
@@ -131,20 +183,24 @@ public class CarController : MonoBehaviour
         frontPassengerWheel.steerAngle = steerAngle;
     }
 
-    private void Accelerate() {
-        CheckFuel();
-        
-        carCondition.fuelLeft = carCondition.fuelLeft - (Mathf.Abs(verticalInput) * 0.1f);
-        foreach(WheelCollider wheel in frontAxle) {
-            wheel.motorTorque = verticalInput * appliedMotorForce;
-            } 
+    private void Accelerate() {        
+        if(engineRunning && carCondition.fuelLeft > 0) {
+            carCondition.fuelLeft = carCondition.fuelLeft - (Mathf.Abs(verticalInput) * 0.1f);
+            
+            foreach(WheelCollider wheel in frontAxle) {
+                wheel.motorTorque = verticalInput * enginePower;
+                } 
+        } else {
+            foreach(WheelCollider wheel in frontAxle) {
+                wheel.motorTorque = 0f;
+                } 
+        }
+
     }
 
     private void CheckFuel() {
-        if (carCondition.fuelLeft == 0) {
-         appliedMotorForce = 0f;   
-        } else {
-            appliedMotorForce = enginePower;
+        if (carCondition.fuelLeft == 0f && engineRunning) {
+            StartCoroutine(StopEngine());
         }
     }
     private void Brake() {
