@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 802865468212052203}
   - component: {fileID: 802865468212052202}
+  - component: {fileID: 1252771978}
+  - component: {fileID: 1252771977}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -46,3 +48,130 @@ MonoBehaviour:
   dayLenghtMins: 1
   dayLenght: 0
   timer: 0
+--- !u!82 &1252771978
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802865468212052116}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: abdd5d342d2b8e840b14aa6aec4bb000, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &1252771977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 802865468212052116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ee368d8ef033424e8dec0e9a254f9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hungerText: {fileID: 0}
+  thirstText: {fileID: 0}
+  energyText: {fileID: 0}
+  coldText: {fileID: 0}
+  dyingReasonText: {fileID: 0}
+  maxHunger: 30
+  maxThirst: 10
+  maxCold: -60
+  minEnergy: 0
+  needsDamage: 5
+  hungerSound: {fileID: 8300000, guid: 80e73f8e79211df458ca80c6c124b0e0, type: 3}
+  thirstSound: {fileID: 8300000, guid: 4160f00db7363ed4aad5d8bfe0a5fe15, type: 3}
+  coldSound: {fileID: 8300000, guid: 961ef0359478f504b890d4564de30013, type: 3}
+  energySound: {fileID: 8300000, guid: 7567c000d3ff54d468a02cfbe8c8cccc, type: 3}
+  damageTakenSound: {fileID: 8300000, guid: 11c0a794d7d8d4048a1f914ccb179b8d, type: 3}
+  energyLeft: 100
+  thirst: 0
+  hunger: 0
+  currentTemperature: 10
