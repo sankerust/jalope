@@ -21,11 +21,11 @@ public class ObjectHandling : MonoBehaviour
     void Update()
     {
         if(ObjectInfo) {
-            ObjectInfo.text = null;
+            ObjectInfo.text = "";
         }
         
         
-        if(IsInRange()) {
+        if(IsInRange() && RaycastObject()) {
             ObjectInfo.text = RaycastObject().gameObject.name;
             HandleObject();
         }

@@ -237,11 +237,12 @@ public class CarController : MonoBehaviour
         foreach(WheelCollider wheel in allWheels) {
                 wheel.brakeTorque = brakePower;
             }
-        carCondition.fuelText.enabled = false;
+        carCondition.fuelBar.SetActive(false);
+        
     }
 
     private void OnEnable() {
-        carCondition.fuelText.enabled = true;
+        carCondition.fuelBar.SetActive(true);
     }
 
 
