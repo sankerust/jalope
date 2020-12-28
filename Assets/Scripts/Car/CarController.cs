@@ -80,24 +80,69 @@ public class CarController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
     }
+    private void Steer() {
+        steerAngle = maxSteerAngle * horizontalInput;
+        frontDriverWheel.steerAngle = steerAngle;
+        frontPassengerWheel.steerAngle = steerAngle;
+    }
+    private void Brake() {
+        if (Input.GetKey(KeyCode.Space)) {
+            foreach(WheelCollider wheel in allWheels) {
+                wheel.brakeTorque = brakePower;
+            }
+            return;
+        }
+        foreach(WheelCollider wheel in allWheels) {
+                wheel.brakeTorque = 0f;
+            }
+    }
+    private void UpdateWheelPoses() {
+        UpdateWheelPose(frontDriverWheel, frontDriverTransform);
+        UpdateWheelPose(frontPassengerWheel, frontPassengerTransform);
+        UpdateWheelPose(rearDriverWheel, rearDriverTransform);
+        UpdateWheelPose(rearPassengerWheel, rearPassengerTransform);
+    }
 
+    private void UpdateWheelPose(WheelCollider collider, Transform transform) {
+        Vector3 position = transform.position;
+        Quaternion quaternion = transform.rotation;
+
+        collider.GetWorldPose(out position, out quaternion);
+
+        transform.position = position;
+        transform.rotation = quaternion;
+    }
     private void Update() {
         GetInput();
         CheckFuel();
-        speedometerVelocity();
+        BurnFuel();
+        Speedometer();
         PlayEngineSound();
     }
+    private void GetInput() {
+        if(Input.GetKeyDown("e") && !engineRunning) {
+            StartCoroutine(StartEngine());
+        }
+        if(Input.GetKeyDown("e") && engineRunning && !VehicleIsMoving()) {
+            StartCoroutine(StopEngine());
+        }
+    }
+    private void CheckFuel() {
+        if (carCondition.fuelLeft == 0f && engineRunning) {
+            StartCoroutine(StopEngine());
+        }
+    }
 
- private void speedometerRPM(){
-     // incorrect
-         wheelRadius = frontDriverWheel.radius; 
-         wheelRpm = (frontDriverWheel.rpm + frontPassengerWheel.rpm) / 2f; 
-
-         circumFerence = 2.0f * 3.14f * wheelRadius; // Finding circumFerence 2 Pi R
-         speedOnKmh = circumFerence * wheelRpm *60; 
-         normalizedSpeed = (speedOnKmh - 0) / (140 - 0);
-     }
-     private void speedometerVelocity() {
+    private void BurnFuel()
+    {
+        if (engineRunning) {
+            carCondition.fuelLeft -= carCondition.idleFuelConsumption * Time.deltaTime;
+            if (verticalInput != 0) {
+                carCondition.fuelLeft -= carCondition.idleFuelConsumption * verticalInput * Time.deltaTime;
+            }
+        }
+    }
+     private void Speedometer() {
          carSpeed = Mathf.RoundToInt(rigidbody.velocity.magnitude * 3.6f);
      }
 
@@ -135,14 +180,7 @@ public class CarController : MonoBehaviour
          }
          
      }
-    public void GetInput() {
-        if(Input.GetKeyDown("e") && !engineRunning) {
-            StartCoroutine(StartEngine());
-        }
-        if(Input.GetKeyDown("e") && engineRunning && !VehicleIsMoving()) {
-            StartCoroutine(StopEngine());
-        }
-    }
+
     IEnumerator StopEngine() {
         engineRunning = false;
         audioSource.Stop();
@@ -176,16 +214,9 @@ public class CarController : MonoBehaviour
         }
         
     }
-
-    private void Steer() {
-        steerAngle = maxSteerAngle * horizontalInput;
-        frontDriverWheel.steerAngle = steerAngle;
-        frontPassengerWheel.steerAngle = steerAngle;
-    }
-
     private void Accelerate() {        
         if(engineRunning && carCondition.fuelLeft > 0) {
-            carCondition.fuelLeft = carCondition.fuelLeft - (Mathf.Abs(verticalInput) * 0.1f);
+            carCondition.fuelLeft = carCondition.fuelLeft - (Mathf.Abs(verticalInput) * 0.1f) ;
             
             foreach(WheelCollider wheel in frontAxle) {
                 wheel.motorTorque = verticalInput * enginePower;
@@ -197,40 +228,6 @@ public class CarController : MonoBehaviour
         }
 
     }
-
-    private void CheckFuel() {
-        if (carCondition.fuelLeft == 0f && engineRunning) {
-            StartCoroutine(StopEngine());
-        }
-    }
-    private void Brake() {
-        if (Input.GetKey(KeyCode.Space)) {
-            foreach(WheelCollider wheel in allWheels) {
-                wheel.brakeTorque = brakePower;
-            }
-            return;
-        }
-        foreach(WheelCollider wheel in allWheels) {
-                wheel.brakeTorque = 0f;
-            }
-    }
-    private void UpdateWheelPoses() {
-        UpdateWheelPose(frontDriverWheel, frontDriverTransform);
-        UpdateWheelPose(frontPassengerWheel, frontPassengerTransform);
-        UpdateWheelPose(rearDriverWheel, rearDriverTransform);
-        UpdateWheelPose(rearPassengerWheel, rearPassengerTransform);
-    }
-
-    private void UpdateWheelPose(WheelCollider collider, Transform transform) {
-        Vector3 position = transform.position;
-        Quaternion quaternion = transform.rotation;
-
-        collider.GetWorldPose(out position, out quaternion);
-
-        transform.position = position;
-        transform.rotation = quaternion;
-    }
-
     private void OnDisable() {
         horizontalInput = 0;
         verticalInput = 0;
@@ -240,11 +237,7 @@ public class CarController : MonoBehaviour
         carCondition.fuelBar.SetActive(false);
         
     }
-
     private void OnEnable() {
         carCondition.fuelBar.SetActive(true);
     }
-
-
-
 }

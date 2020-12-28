@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class CarCondition : MonoBehaviour
 {
     [SerializeField] float maxFuel = 100f;
+    public float idleFuelConsumption = 0.1f;
     public float fuelLeft = 100f;
     public GameObject fuelBar;
     Slider fuelBarSlider;
