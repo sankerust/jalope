@@ -14,6 +14,8 @@ public class EnterCar : MonoBehaviour
     AudioSource audioSource;
     [SerializeField] AudioClip doorOpenSound;
     [SerializeField] AudioClip doorCloseSound;
+    [SerializeField] HeadLights headLights;
+    [SerializeField] ParticleSystem snowParticles;
     private void Awake() {
         audioSource = gameObject.AddComponent<AudioSource>();
     }
@@ -52,9 +54,11 @@ public class EnterCar : MonoBehaviour
             audioSource.clip = doorOpenSound;
             audioSource.Play();
             player.GetComponent<PlayerMovement>().enabled = false;
+            headLights.enabled = true;
             yield return new WaitForSeconds(audioSource.clip.length);
 
             player.GetComponent<PlayerMovement>().enabled = true;
+            snowParticles.gameObject.transform.SetParent(carController.transform);
             player.SetActive(false);
             player.gameObject.transform.SetParent(carController.transform);
             
@@ -79,7 +83,9 @@ public class EnterCar : MonoBehaviour
 
             player.transform.position = exitPosition;
             player.gameObject.transform.SetParent(null);
+            snowParticles.gameObject.transform.SetParent(player.transform);
             player.SetActive(true);
+            headLights.enabled = false;
             CarCam.gameObject.SetActive(false);
             isInCar = false;
             carController.enabled = false;
