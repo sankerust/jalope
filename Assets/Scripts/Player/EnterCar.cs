@@ -58,7 +58,11 @@ public class EnterCar : MonoBehaviour
             yield return new WaitForSeconds(audioSource.clip.length);
 
             player.GetComponent<PlayerMovement>().enabled = true;
+
+            //temp fix for snow position when in vehicle TODO
             snowParticles.gameObject.transform.SetParent(carController.transform);
+            float oldPos = snowParticles.gameObject.transform.localPosition.z;
+            snowParticles.gameObject.transform.localPosition = new Vector3(0,2f,2f);
             player.SetActive(false);
             player.gameObject.transform.SetParent(carController.transform);
             
@@ -72,7 +76,7 @@ public class EnterCar : MonoBehaviour
 
     IEnumerator ExitCar() {
 
-        if (Input.GetKeyDown("f") && isInCar && !carController.VehicleIsMoving()) {
+        if (Input.GetKeyDown("e") && isInCar && !carController.VehicleIsMoving()) {
             audioSource.clip = doorOpenSound;
             audioSource.Play();
 

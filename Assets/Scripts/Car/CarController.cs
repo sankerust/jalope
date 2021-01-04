@@ -120,10 +120,10 @@ public class CarController : MonoBehaviour
         PlayEngineSound();
     }
     private void GetInput() {
-        if(Input.GetKeyDown("e") && !engineRunning) {
+        if(Input.GetKeyDown("f") && !engineRunning) {
             StartCoroutine(StartEngine());
         }
-        if(Input.GetKeyDown("e") && engineRunning && !VehicleIsMoving()) {
+        if(Input.GetKeyDown("f") && engineRunning && !VehicleIsMoving()) {
             StartCoroutine(StopEngine());
         }
     }
